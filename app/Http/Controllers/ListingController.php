@@ -32,8 +32,6 @@ class ListingController extends Controller
 
     public function store(Request $request)
     {
-        // dd($request->all());
-
         $formFields = $request->validate([
             'title' => 'required',
             'company' => ['required', Rule::unique('listings', 'company')],
@@ -41,12 +39,14 @@ class ListingController extends Controller
             'email' => ['required', 'email'],
             'website' => ['required', 'url'],
             'tags' => 'required',
-            // 'logo' => 'nullable',
             'description' => 'required'
         ]);
 
-        Listing::create($formFields);
+        if($request->has('logo')) {
+            $formFields['logo'] = $request->file('logo')->store('logos', 'public');
+        }
 
+        Listing::create($formFields);
         return redirect(@route('home'))->with('message', 'Listing created successfully');
     }
 }
