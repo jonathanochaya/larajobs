@@ -39,17 +39,19 @@
                 </div>
             </x-card>
 
-            <x-card class="mt-4 p-2 flex space-x-6">
-                <a href="{{ @route('edit', ['listing'=>$listing->id]) }}">
-                    <i class="fa-solid fa-pencil"></i> Edit
-                </a>
+            @unless($listing->user_id !== auth()->id())
+                <x-card class="mt-4 p-2 flex space-x-6 justify-center">
+                    <a href="{{ @route('edit', ['listing'=>$listing->id]) }}">
+                        <i class="fa-solid fa-pencil"></i> Edit
+                    </a>
 
-                <form action="{{ @route('delete', $listing->id) }}" method="POST">
-                    @csrf
-                    @method('DELETE')
-                    <button class="text-red-500"><i class="fa-solid fa-trash"></i> Delete</button>
-                </form>
-            </x-card>
+                    <form action="{{ @route('delete', $listing->id) }}" method="POST">
+                        @csrf
+                        @method('DELETE')
+                        <button class="text-red-500"><i class="fa-solid fa-trash"></i> Delete</button>
+                    </form>
+                </x-card>
+            @endunless
         </div>
 
     @endif
