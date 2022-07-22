@@ -23,7 +23,13 @@ Route::get('/', [ListingController::class, 'index'])->name('home');
 Route::get('/listings/create', [ListingController::class, 'create'])->name('create');
 
 // store a single job listing
-Route::post('/listings', [ListingController::class, 'store'])->name('add_job');
+Route::post('/listings', [ListingController::class, 'store'])->name('add');
+
+// Show edit form for job listing
+Route::get('/listing/{listing}/edit', [ListingController::class, 'edit'])->name('edit');
+
+// Update single job listing
+Route::put('/listing/{listing}', [ListingController::class, 'update'])->name('update');
 
 // show single job listing
 Route::get('/listings/{listing:id}$', [ListingController::class, 'show'])->whereNumber('id')->name('listing');
