@@ -21,7 +21,7 @@ Route::controller(ListingController::class)->group(function() {
     // all job listings
     Route::get('/', 'index')->name('home');
 
-    Route::prefix('listing')->group(function() {
+    Route::prefix('listing')->middleware('auth')->group(function() {
         // Edit form for job listing
         Route::get('/{listing}/edit', 'edit')->name('edit');
 
@@ -33,31 +33,40 @@ Route::controller(ListingController::class)->group(function() {
     });
 
     Route::prefix('listings')->group(function() {
-        // Save a single job listing
-        Route::post('/', 'store')->name('add');
 
-        // Show create single job listing
-        Route::get('/create', 'create')->name('create');
+        Route::middleware('auth')->group(function() {
+            // Save a single job listing
+            Route::post('/', 'store')->name('add');
+
+            // Show create single job listing
+            Route::get('/create', 'create')->name('create');
+
+            // Manage user listings
+            Route::get('/manage', 'manage')->name('manage');
+        });
 
         // show single job listing
         Route::get('/{listing:id}$', 'show')->whereNumber('id')->name('listing');
     });
 });
 
-// Show user registration form
-Route::get('/register', [UserController::class, 'create'])->name('register');
+// registration and login routes
+Route::controller(UserController::class)->group(function() {
 
-// Save user registration
-Route::post('/users', [UserController::class, 'store'])->name('register_user');
+    Route::middleware('guest')->group(function() {
+        // Show user registration form
+        Route::get('/register', 'create')->name('register');
 
-// Show user login form
-Route::get('/login', [UserController::class, 'login'])->name('login');
+        // Save user registration
+        Route::post('/users', 'store')->name('register_user');
 
-// Login User
-Route::post('/login', [UserController::class, 'authenticate'])->name('auth_login');
+        // Show user login form
+        Route::get('/login', 'login')->name('login');
 
-// Logout user
-Route::post('/logout', [UserController::class, 'logout'])->name('logout');
+        // Login User
+        Route::post('/login', 'authenticate')->name('auth_login');
+    });
 
-// Manage user listings
-Route::get('/listings/manage', [ListingController::class, 'manage'])->name('manage');
+    // Logout user
+    Route::post('/logout', 'logout')->name('logout');
+});
