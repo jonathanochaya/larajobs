@@ -19,17 +19,20 @@ use App\Http\Controllers\ListingController;
 // all job listings
 Route::get('/', [ListingController::class, 'index'])->name('home');
 
-// show create single job listing
+// Show create single job listing
 Route::get('/listings/create', [ListingController::class, 'create'])->name('create');
 
-// store a single job listing
+// Save a single job listing
 Route::post('/listings', [ListingController::class, 'store'])->name('add');
 
-// Show edit form for job listing
+// Edit form for job listing
 Route::get('/listing/{listing}/edit', [ListingController::class, 'edit'])->name('edit');
 
 // Update single job listing
 Route::put('/listing/{listing}', [ListingController::class, 'update'])->name('update');
+
+// Delete single job listing
+Route::delete('/listing/{listing}', [ListingController::class, 'destroy'])->name('delete');
 
 // show single job listing
 Route::get('/listings/{listing:id}$', [ListingController::class, 'show'])->whereNumber('id')->name('listing');
